@@ -1,0 +1,17 @@
+{
+  "name": "Investment Stats for Coinbase",
+  "description": "See more information on your crypto wallots, supplementing the meager balance information that Coinbase offers.",
+  "version": "0.1",
+  "manifest_version": 2,
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.coinbase.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "128": "icon.png"
+  }
+}
