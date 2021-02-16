@@ -8,5 +8,6 @@ This extension will show you:
 - The percentage net worth of your investments in comparison to the breakeven point
 
 Once enabled, simply navigate to one of your Coinbase wallets to see your investment statistics.
+https://chrome.google.com/webstore/detail/investment-stats-for-coin/hgdhmdhnjphbkcnpihgdnajlpejpcgmo
 
 ![Example Image](screenshot-1.png)
