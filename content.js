@@ -1,8 +1,11 @@
 // Developed by Grant @ GeekOverdriveStudio
-var worthRegex = /(\$[0-9]+\.[0-9]+)+/
-var investedRegex = /((−|\+)\$[0-9]+\.[0-9]+)+/
+var currencyRegex = /(.)([0-9]+\.[0-9]+)+/
+var worthRegex = /(.[0-9]+\.[0-9]+)+/
+var investedCurrencyRegex = /(−|\+)(.)[0-9]+\.[0-9]+/
+var investedRegex = /((−|\+).[0-9]+\.[0-9]+)+/
 var cryptoRegex = /((−|\+)[0-9]+\.[0-9]+ )+/
 var cryptoBalanceRegex = /([0-9]+\.*[0-9]*( [A-Z]+))+/
+var currency = ""
 var currentURL = "";
 var checker;
 
@@ -30,13 +33,15 @@ function createStats() {
                 // Parse the crypto balance of our investments from the 'Balance' span
                 found = true;
                 balanceSpan = aTags[i-1];
-                worth = parseFloat(aTags[i+1].innerHTML.toString().match(worthRegex)[0].replace('$', ''));
+                currency = aTags[i+1].innerHTML.toString().match(currencyRegex)[1];
+                worth = parseFloat(aTags[i+1].innerHTML.toString().match(worthRegex)[0].replace(currency, ''));
                 cryptoBalance = parseFloat(aTags[i+1].innerHTML.toString().replace(',', '').match(cryptoBalanceRegex)[0]);
             // If this is a Purchase or Sell span, read the crypto and investment values from it
             } else if (aTags[i].innerHTML.match(investedRegex)) {
                 // Parse the amount we invested from this span, replacing the unicode minus-sign with a dash
                 // Add it to the investedTotal
-                increment = parseFloat(aTags[i].innerHTML.toString().match(investedRegex)[0].replace('$', '').replace('−', '-'));
+                investedCurrency = aTags[i].innerHTML.toString().match(investedCurrencyRegex)[2];
+                increment = parseFloat(aTags[i].innerHTML.toString().match(investedRegex)[0].replace(investedCurrency, '').replace('−', '-'));
                 if (increment > 0) { investedTotal = investedTotal + increment; }
             } else if (aTags[i].innerHTML.match(cryptoRegex)) {
                 // Parse the amount of crypto we received/sold from this span, replacing the unicode minus-sign with a dash
@@ -104,9 +109,9 @@ function createElements(invested, profit, brp, netPercent) {
     container.appendChild(profitEle);
 
     container.id = "coinbaseNet";
-    totalInvested.innerHTML = `<br>Invested: $${invested} × ($${brp})<br>`;
+    totalInvested.innerHTML = `<br>Invested: ${currency}${invested} × (${currency}${brp})<br>`;
     profitLabel.innerHTML = `Net: `;
-    profitEle.innerHTML = ((profit >= 0) ? "+" : "−") + `$${Math.abs(profit)}` + ((profit >= 0) ? " (▲" : " (▼") + `${netPercent}%)`;
+    profitEle.innerHTML = ((profit >= 0) ? "+" : "−") + `${currency}${Math.abs(profit)}` + ((profit >= 0) ? " (▲" : " (▼") + `${netPercent}%)`;
     profitEle.style = "color: " + ((profit >= 0) ? "green;" : "red;");
     return container;
 }
