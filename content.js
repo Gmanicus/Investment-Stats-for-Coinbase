@@ -1,9 +1,9 @@
 // Developed by Grant @ GeekOverdriveStudio
-var currencyRegex = /(.)([0-9]+\.[0-9]+)+/
-var worthRegex = /(.[0-9]+\.[0-9]+)+/
+var currencyRegex = /[^\d,](.)([0-9]+\.[0-9]+)+/
+var worthRegex = /([^\s\d][0-9]+\.[0-9]+)+/
 var investedCurrencyRegex = /(−|\+)(.)[0-9]+\.[0-9]+/
-var investedRegex = /((−|\+).[0-9]+\.[0-9]+)+/
-var cryptoRegex = /((−|\+)[0-9]+\.[0-9]+ )+/
+var investedRegex = /((−|\+)[^\d\s][0-9]+\.[0-9]+)+/
+var cryptoRegex = /((−|\+)[0-9]+\.[0-9]+)+ /
 var cryptoBalanceRegex = /([0-9]+\.*[0-9]*( [A-Z]+))+/
 var currency = ""
 var currentURL = "";
@@ -34,14 +34,22 @@ function createStats() {
                 found = true;
                 balanceSpan = aTags[i-1];
                 currency = aTags[i+1].innerHTML.toString().match(currencyRegex)[1];
-                worth = parseFloat(aTags[i+1].innerHTML.toString().match(worthRegex)[0].replace(currency, ''));
-                cryptoBalance = parseFloat(aTags[i+1].innerHTML.toString().replace(',', '').match(cryptoBalanceRegex)[0]);
+                worth = aTags[i+1].innerHTML.toString();
+                worth = worth.replace(',', '');
+                worth = worth.match(worthRegex)[0];
+                worth = parseFloat(worth.replace(currency, ''));
+
+                cryptoBalance = aTags[i+1].innerHTML.toString();
+                cryptoBalance = cryptoBalance.replace(',', '');
+                cryptoBalance = parseFloat(cryptoBalance.match(cryptoBalanceRegex)[0]);
+                console.log(`Balance: ${currency}${cryptoBalance} (${currency}${worth})`);
             // If this is a Purchase or Sell span, read the crypto and investment values from it
             } else if (aTags[i].innerHTML.match(investedRegex)) {
                 // Parse the amount we invested from this span, replacing the unicode minus-sign with a dash
                 // Add it to the investedTotal
                 investedCurrency = aTags[i].innerHTML.toString().match(investedCurrencyRegex)[2];
                 increment = parseFloat(aTags[i].innerHTML.toString().match(investedRegex)[0].replace(investedCurrency, '').replace('−', '-'));
+                console.log(increment);
                 if (increment > 0) { investedTotal = investedTotal + increment; }
             } else if (aTags[i].innerHTML.match(cryptoRegex)) {
                 // Parse the amount of crypto we received/sold from this span, replacing the unicode minus-sign with a dash
