@@ -5,6 +5,11 @@
 <p align="center">
   See more information on your crypto wallots, supplementing the balance information that Coinbase offers
 </p>
+<hr/>
+<h1 align="center">
+  ⚠️DEPRECATED
+</h1>
+<hr/>
 <p align="center">
   <a href="https://chrome.google.com/webstore/detail/investment-stats-for-coin/hgdhmdhnjphbkcnpihgdnajlpejpcgmo">Chrome Webstore Download</a>
   <br>
